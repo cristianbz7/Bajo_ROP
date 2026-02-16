@@ -32,13 +32,17 @@ copy .env.example .env
 
 2. Edita `.env` con tus credenciales reales de Supabase:
 
-- `PGHOST` - Host de tu proyecto Supabase
-- `PGUSER` - Usuario (normalmente `postgres`)
-- `PGPASSWORD` - Password de la base de datos
-- `PGDATABASE` - Nombre de la base de datos (por defecto `postgres`)
-- `PGPORT` - Puerto (por defecto `5432`)
+- `SUPABASE_URL` - URL de tu proyecto (ej: `https://xxxxx.supabase.co`)
+- `SUPABASE_DB_PASSWORD` - Contraseña de la base de datos (Database Password)
 
-**⚠️ IMPORTANTE:** Nunca subas el archivo `.env` a Git. Ya está incluido en `.gitignore`.
+**Variables opcionales** (ya tienen valores por defecto):
+- `SUPABASE_DB_USER` - Usuario (por defecto `postgres`)
+- `SUPABASE_DB_NAME` - Nombre de la BD (por defecto `postgres`)
+- `SUPABASE_DB_PORT` - Puerto (por defecto `5432`)
+
+**⚠️ IMPORTANTE:** 
+- Nunca subas el archivo `.env` a Git. Ya está incluido en `.gitignore`.
+- La contraseña es la **Database Password** de Supabase, NO el API Key.
 
 ## Ejecutar el script
 

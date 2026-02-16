@@ -2,6 +2,11 @@ import os
 import json
 import pandas as pd
 import psycopg2
+from dotenv import load_dotenv
+from urllib.parse import urlparse
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 
 
 SQL_BELOW_ROP = """
@@ -71,23 +76,30 @@ ORDER BY gap DESC, ip.sku;
 
 
 def main():
-    # Recomendado: setear variables de entorno (más seguro que hardcodear)
-    host = os.environ.get("PGHOST")
-    dbname = os.environ.get("PGDATABASE", "postgres")
-    user = os.environ.get("PGUSER")
-    password = os.environ.get("PGPASSWORD")
-    port = int(os.environ.get("PGPORT", "5432"))
-
-    if not all([host, user, password]):
-        raise RuntimeError("Faltan variables: PGHOST, PGUSER, PGPASSWORD (y opcional PGDATABASE, PGPORT).")
+    # Leer configuración de Supabase
+    supabase_url = os.environ.get("SUPABASE_URL")
+    db_password = os.environ.get("SUPABASE_DB_PASSWORD")
+    
+    if not supabase_url or not db_password:
+        raise RuntimeError("Faltan variables: SUPABASE_URL y SUPABASE_DB_PASSWORD")
+    
+    # Parsear URL de Supabase para extraer el host
+    # Formato: https://xxxxx.supabase.co
+    parsed = urlparse(supabase_url)
+    host = parsed.hostname
+    
+    # Configuración de conexión PostgreSQL de Supabase
+    user = os.environ.get("SUPABASE_DB_USER", "postgres")
+    dbname = os.environ.get("SUPABASE_DB_NAME", "postgres")
+    port = int(os.environ.get("SUPABASE_DB_PORT", "5432"))
 
     conn = psycopg2.connect(
         host=host,
         dbname=dbname,
         user=user,
-        password=password,
+        password=db_password,
         port=port,
-        sslmode="require"  # Supabase normalmente lo exige
+        sslmode="require"
     )
 
     try:
